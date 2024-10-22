@@ -1,4 +1,4 @@
-data "aws_security_group" "proj_sg" {
+data "aws_security_group" "proj_sg" {      #using existing sec groups
   filter {
     name   = "group-name"
     values = ["proj-sg"]
