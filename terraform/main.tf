@@ -1,35 +1,14 @@
-resource "aws_security_group" "proj-sg" {
-  name        = "proj-sg"
-  description = "Allow inbound traffic and all outbound traffic"
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-# Ingress rule to allow all inbound traffic
-  ingress {
-    from_port   = 0
-    to_port     = 0  # All ports
-    protocol    = "-1"    # All protocols
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "proj-sg-bf"
+data "aws_security_group" "proj_sg" {
+  filter {
+    name   = "group-name"
+    values = ["proj-sg"]
   }
 }
+
 resource "aws_instance" "prodc" {
   ami             = "ami-0e86e20dae9224db8"
   key_name        = "jendock"
-  security_groups = ["proj-sg"]
+  security_groups = [data.aws_security_group.proj_sg.id]  # Reference the existing security group
   instance_type   = "t2.micro"
   count           = 1
   tags = {
@@ -40,11 +19,10 @@ resource "aws_instance" "prodc" {
 resource "aws_instance" "monitorc" {
   ami             = "ami-0e86e20dae9224db8"
   key_name        = "host"
-  security_groups = ["proj-sg"]
+  security_groups = [data.aws_security_group.proj_sg.id]  # Reference the existing security group
   instance_type   = "t2.micro"
   count           = 1
   tags = {
     Name = "monitorchk"
   }
 }
-                   
