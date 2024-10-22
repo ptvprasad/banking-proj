@@ -1,5 +1,5 @@
-resource "aws_security_group" "proj-sg" {
-  name        = "proj-sg"
+resource "aws_security_group" "proj-sgt" {
+  name        = "proj-sgt"
   description = "Allow inbound traffic and all outbound traffic"
 
   ingress {
@@ -23,28 +23,28 @@ resource "aws_security_group" "proj-sg" {
   }
 
   tags = {
-    Name = "proj-sg-bf"
+    Name = "proj-sg-bft"
   }
 }
 resource "aws_instance" "prodc" {
   ami             = "ami-0e86e20dae9224db8"
   key_name        = "jendock"
-  security_groups = ["proj-sg"]
+  security_groups = ["proj-sgt"]
   instance_type   = "t2.micro"
   count           = 1
   tags = {
-    Name = "jendock"
+    Name = "prodk"
   }
 }
 
 resource "aws_instance" "monitorc" {
   ami             = "ami-0e86e20dae9224db8"
   key_name        = "host"
-  security_groups = ["proj-sg"]
+  security_groups = ["proj-sgt"]
   instance_type   = "t2.micro"
   count           = 1
   tags = {
-    Name = "host"
+    Name = "monitorchk"
   }
 }
                    
